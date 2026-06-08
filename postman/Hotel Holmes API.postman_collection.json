@@ -1,0 +1,197 @@
+{
+  "info": {
+    "_postman_id": "69d3f672-61ec-46ad-8610-d15dbfed4ba9",
+    "name": "Hotel Holmes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53532252"
+  },
+  "item": [
+    {
+      "name": "Booking JSON",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"guestName\": \"Jan Novak\",\r\n  \"email\": \"jan@example.cz\",\r\n  \"phoneNumber\": \"+420123456789\",\r\n  \"requestedRoomType\": \"Deluxe\",\r\n  \"checkInDate\": \"2026-06-07\",\r\n  \"checkOutDate\": \"2026-06-15\",\r\n  \"cardNumber\": \"4111222233334444\",\r\n  \"cardExpiry\": \"12/28\",\r\n  \"selectedAmenities\": [\r\n    \"Arrival Transport\",\r\n    \"In-Room Massage\"\r\n  ],\r\n  \"amenitiesDetails\": \"Allergic to down pillows. Flight arrives at 14:00.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/camel/api/webhook/json",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "camel",
+            "api",
+            "webhook",
+            "json"
+          ]
+        },
+        "description": "POST webhook booking endpoint at /api/webhook/booking. Sends booking payload fields guestName, roomType, checkInDate, and checkOutDate using environment variables."
+      },
+      "response": []
+    },
+    {
+      "name": "Booking XML",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<booking>\r\n    <guestName>Eva Svobodova</guestName>\r\n    <email>eva@seznam.cz</email>\r\n    <phoneNumber>+420987654321</phoneNumber>\r\n    <requestedRoomType>Suite</requestedRoomType>\r\n    <checkInDate>2026-07-01</checkInDate>\r\n    <checkOutDate>2026-07-05</checkOutDate>\r\n    <cardNumber>5412345678901234</cardNumber>\r\n    <cardExpiry>06/26</cardExpiry>\r\n    <amenitiesDetails>Late checkout, dog friendly</amenitiesDetails>\r\n</booking>",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/camel/api/webhook/xml",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "camel",
+            "api",
+            "webhook",
+            "xml"
+          ]
+        },
+        "description": "POST webhook booking endpoint at /api/webhook/booking. Sends booking payload fields guestName, roomType, checkInDate, and checkOutDate using environment variables."
+      },
+      "response": []
+    },
+    {
+      "name": "Webhook In-Room Service Massage",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"roomNumber\": 142,\r\n  \"guestName\": \"John Doe\",\r\n  \"orderCategory\": \"Recreation\", \r\n  \"orderItems\": \"1x 60-Minute Swedish Massage\",\r\n  \"specialInstructions\": \"Guest requests firm pressure and lavender oil.\",\r\n  \"estimatedTotal\": 120.00\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/webhook/service-order",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "webhook",
+            "service-order"
+          ]
+        },
+        "description": "POST webhook booking endpoint at /api/webhook/booking. Sends booking payload fields guestName, roomType, checkInDate, and checkOutDate using environment variables."
+      },
+      "response": []
+    },
+    {
+      "name": "Webhook In-Room Food",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"roomNumber\": 142,\r\n  \"guestName\": \"John Doe\",\r\n  \"orderCategory\": \"Food\", \r\n  \"orderItems\": \"1x Club Sandwich, 1x Diet Coke\",\r\n  \"specialInstructions\": \"No mayo on the sandwich\",\r\n  \"estimatedTotal\": 25.50\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/webhook/service-order",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "webhook",
+            "service-order"
+          ]
+        },
+        "description": "POST webhook booking endpoint at /api/webhook/booking. Sends booking payload fields guestName, roomType, checkInDate, and checkOutDate using environment variables."
+      },
+      "response": []
+    },
+    {
+      "name": "Webhook Complaint",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"guestName\": \"Jan Novák\",\r\n  \"roomNumber\": \"205\",\r\n  \"email\": \"jan.novak@example.com\",\r\n  \"dateOfOccurrence\": \"2026-06-08\",\r\n  \"incidentType\": \"Noise\",\r\n  \"complaintDetails\": \"Hosté v pokoji nad námi dělali po půlnoci velký hluk.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/webhook/complaint",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "webhook",
+            "complaint"
+          ]
+        },
+        "description": "POST webhook booking endpoint at /api/webhook/booking. Sends booking payload fields guestName, roomType, checkInDate, and checkOutDate using environment variables."
+      },
+      "response": []
+    }
+  ]
+}
