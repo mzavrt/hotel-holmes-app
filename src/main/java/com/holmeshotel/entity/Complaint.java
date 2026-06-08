@@ -5,20 +5,28 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "incidents")
-public class Incident {
+@Table(name = "complaints")
+public class Complaint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Guest & Incident Details (From the intake form)
     private String guestName;
     private String roomNumber;
-    private String complaintText;
-    
+    private String email;
+    private LocalDate dateOfOccurrence;
+    private String incidentType;
+    private String complaintDetails;
+
+    // Manager Verification
+    private String isRepetitive; // "Yes" or "No"
+
     // Status tracking (e.g., "OPEN", "RESOLVED")
     private String status; 
     private LocalDateTime loggedAt;
@@ -30,7 +38,7 @@ public class Incident {
     // ==========================================
     // Empty Constructor required by JPA/Hibernate
     // ==========================================
-    public Incident() {
+    public Complaint() {
     }
 
     // ==========================================
@@ -60,12 +68,44 @@ public class Incident {
         this.roomNumber = roomNumber;
     }
 
-    public String getComplaintText() {
-        return complaintText;
+    public String getEmail() {
+        return email;
     }
 
-    public void setComplaintText(String complaintText) {
-        this.complaintText = complaintText;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public LocalDate getDateOfOccurrence() {
+        return dateOfOccurrence;
+    }
+
+    public void setDateOfOccurrence(LocalDate dateOfOccurrence) {
+        this.dateOfOccurrence = dateOfOccurrence;
+    }
+
+    public String getIncidentType() {
+        return incidentType;
+    }
+
+    public void setIncidentType(String incidentType) {
+        this.incidentType = incidentType;
+    }
+
+    public String getComplaintDetails() {
+        return complaintDetails;
+    }
+
+    public void setComplaintDetails(String complaintDetails) {
+        this.complaintDetails = complaintDetails;
+    }
+
+    public String getIsRepetitive() {
+        return isRepetitive;
+    }
+
+    public void setIsRepetitive(String isRepetitive) {
+        this.isRepetitive = isRepetitive;
     }
 
     public String getStatus() {

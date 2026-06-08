@@ -1,9 +1,9 @@
 package com.holmeshotel.repository;
 
-import com.holmeshotel.entity.Incident;
+import com.holmeshotel.entity.Complaint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IncidentRepository extends JpaRepository<Incident, Long> {
+public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 }

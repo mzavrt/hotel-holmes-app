@@ -54,10 +54,10 @@ VALUES ('303', 'Suite', 'VACANT', 'CLEAN');
 
 
 -- ==========================================
--- 2. RESERVATIONS (Dynamic Dates)
+-- 2. RESERVATIONS (Dynamic Dates) - OPRAVENO
 -- ==========================================
 
--- A. ARRIVING TODAY (Can be assigned to 101 or 301)
+-- A. ARRIVING TODAY (Jan Novak)
 INSERT INTO reservation (
     reservation_code, guest_name, email, phone_number, room_type, 
     check_in_date, check_out_date, status, calculated_price, 
@@ -65,10 +65,10 @@ INSERT INTO reservation (
 ) VALUES (
     'RES-100001', 'Jan Novak', 'jan@example.cz', '+420123456789', 'Suite', 
     CURRENT_DATE, DATEADD('DAY', 3, CURRENT_DATE), 'CONFIRMED', 1350.00,
-    'Guest is highly allergic to down pillows. Flight arrives at 14:00.', 'Arrival Transport, Champagne'
+    'Arrival Transport', 'Guest is highly allergic to down pillows. Flight arrives at 14:00. Please prepare Champagne.'
 );
 
--- B. CURRENTLY IN-HOUSE (Occupying 201 or 202)
+-- B. CURRENTLY IN-HOUSE (Eva Svobodová)
 INSERT INTO reservation (
     reservation_code, guest_name, email, phone_number, room_type, 
     check_in_date, check_out_date, status, calculated_price, 
@@ -76,10 +76,10 @@ INSERT INTO reservation (
 ) VALUES (
     'RES-100002', 'Eva Svobodová', 'eva@example.cz', '+420987654321', 'Deluxe', 
     DATEADD('DAY', -2, CURRENT_DATE), DATEADD('DAY', 1, CURRENT_DATE), 'CHECKED_IN', 660.00,
-    'Needs a quiet room away from the elevator.', 'None'
+    'In-Room Breakfast', 'Needs a quiet room away from the elevator. Breakfast at 8:00.'
 );
 
--- C. CHECKED OUT TODAY (Freed up room 102)
+-- C. CHECKED OUT TODAY (Petr Dvořák)
 INSERT INTO reservation (
     reservation_code, guest_name, email, phone_number, room_type, 
     check_in_date, check_out_date, status, calculated_price, 
@@ -87,10 +87,10 @@ INSERT INTO reservation (
 ) VALUES (
     'RES-100003', 'Petr Dvořák', 'petr@example.cz', '+420111222333', 'Standard', 
     DATEADD('DAY', -3, CURRENT_DATE), CURRENT_DATE, 'CHECKED_OUT', 330.00,
-    'Late checkout requested (approved for 13:00).', 'None'
+    'Departure Transport', 'Late checkout requested (approved for 13:00).'
 );
 
--- D. FUTURE BOOKING 
+-- D. FUTURE BOOKING (Lucie Černá)
 INSERT INTO reservation (
     reservation_code, guest_name, email, phone_number, room_type, 
     check_in_date, check_out_date, status, calculated_price, 
@@ -98,7 +98,7 @@ INSERT INTO reservation (
 ) VALUES (
     'RES-100004', 'Lucie Černá', 'lucie@example.cz', '+420444555666', 'Standard', 
     DATEADD('DAY', 14, CURRENT_DATE), DATEADD('DAY', 20, CURRENT_DATE), 'CONFIRMED', 660.00,
-    'Anniversary trip.', 'Flowers in room'
+    'In-Room Massage, Arrival Transport', 'Anniversary trip. Flowers in room upon arrival, massage at 16:00 on first day.'
 );
 
 

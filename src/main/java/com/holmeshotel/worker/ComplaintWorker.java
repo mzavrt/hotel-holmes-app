@@ -1,12 +1,13 @@
 package com.holmeshotel.worker;
 
-import com.holmeshotel.entity.Incident;
-import com.holmeshotel.repository.IncidentRepository;
+import com.holmeshotel.entity.Complaint;
+import com.holmeshotel.repository.ComplaintRepository;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.annotation.JobWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class ComplaintWorker {
 
     @Autowired
-    private IncidentRepository incidentRepository;
+    private ComplaintRepository complaintRepository;
 
     // ====================================================================================
     // WORKER 1: Initial Intake (Linked to "Log Complaint to Database" Service Task)
@@ -26,24 +27,34 @@ public class ComplaintWorker {
         
         String guestName = (String) job.getVariable("guestName");
         String roomNumber = (String) job.getVariable("roomNumber");
-        String complaintText = (String) job.getVariable("complaintText");
+        String email = (String) job.getVariable("email");
+        String dateOfOccurrenceStr = (String) job.getVariable("dateOfOccurrence");
+        String incidentType = (String) job.getVariable("incidentType");
+        String complaintDetails = (String) job.getVariable("complaintDetails");
 
         // 1. Create and Save the Initial Record
-        Incident incident = new Incident();
-        incident.setGuestName(guestName);
-        incident.setRoomNumber(roomNumber);
-        incident.setComplaintText(complaintText);
-        incident.setStatus("OPEN");
-        incident.setLoggedAt(LocalDateTime.now());
+        Complaint complaint = new Complaint();
+        complaint.setGuestName(guestName);
+        complaint.setRoomNumber(roomNumber);
+        complaint.setEmail(email);
         
-        Incident savedIncident = incidentRepository.save(incident);
+        // Parse date safely (Camunda usually sends dates as ISO strings like "2026-10-15T00:00:00.000Z")
+        if (dateOfOccurrenceStr != null && !dateOfOccurrenceStr.isEmpty()) {
+            complaint.setDateOfOccurrence(LocalDate.parse(dateOfOccurrenceStr.substring(0, 10)));
+        }
+        
+        complaint.setIncidentType(incidentType);
+        complaint.setComplaintDetails(complaintDetails);
+        complaint.setStatus("OPEN");
+        complaint.setLoggedAt(LocalDateTime.now());
+        
+        Complaint savedComplaint = complaintRepository.save(complaint);
 
-        System.out.println("🚨 [Intake] Complaint logged for Room " + roomNumber + ". DB ID: " + savedIncident.getId());
+        System.out.println("🚨 [Intake] Complaint logged for Room " + roomNumber + ". DB ID: " + savedComplaint.getId());
 
         // 2. Return the DB ID to Camunda! 
-        // We need this so the final resolution worker knows which row to update.
         Map<String, Object> variables = new HashMap<>();
-        variables.put("incidentDbId", savedIncident.getId());
+        variables.put("complaintDbId", savedComplaint.getId());
         return variables;
     }
 
@@ -54,42 +65,30 @@ public class ComplaintWorker {
     public void handleLogResolution(final ActivatedJob job) {
         
         // Grab the Database ID we saved in Worker 1
-        Long incidentDbId = ((Number) job.getVariable("incidentDbId")).longValue();
+        Long complaintDbId = ((Number) job.getVariable("complaintDbId")).longValue();
         
-        // This variable is set by the manager during their User Task (e.g., "Issued 5% Coupon")
+        // Variables set by the manager during their User Tasks
+        String isRepetitive = (String) job.getVariable("isRepetitive");
         String resolutionAction = (String) job.getVariable("resolutionAction"); 
 
-        System.out.println("💾 [Resolution] Attempting to update Incident ID: " + incidentDbId);
+        System.out.println("💾 [Resolution] Attempting to update Complaint ID: " + complaintDbId);
 
         // Fetch the EXISTING record from the database
-        Optional<Incident> incidentOpt = incidentRepository.findById(incidentDbId);
+        Optional<Complaint> complaintOpt = complaintRepository.findById(complaintDbId);
 
-        if (incidentOpt.isPresent()) {
-            Incident incident = incidentOpt.get();
+        if (complaintOpt.isPresent()) {
+            Complaint complaint = complaintOpt.get();
             
-            // Update the record to reflect that the staff fixed it
-            incident.setStatus("RESOLVED");
-            incident.setResolutionAction(resolutionAction);
-            incident.setResolvedAt(LocalDateTime.now());
+            // Update the record to reflect the manager's check and the final fix
+            complaint.setIsRepetitive(isRepetitive);
+            complaint.setStatus("RESOLVED");
+            complaint.setResolutionAction(resolutionAction);
+            complaint.setResolvedAt(LocalDateTime.now());
             
-            incidentRepository.save(incident);
-            System.out.println("✅ [Resolution] Successfully closed incident for " + incident.getGuestName() + ". Action taken: " + resolutionAction);
+            complaintRepository.save(complaint);
+            System.out.println("✅ [Resolution] Successfully closed complaint for " + complaint.getGuestName() + ". Action taken: " + resolutionAction);
         } else {
-            System.err.println("❌ [Resolution] ERROR: Could not find Incident ID " + incidentDbId + " in the database.");
+            System.err.println("❌ [Resolution] ERROR: Could not find Complaint ID " + complaintDbId + " in the database.");
         }
-    }
-
-    // ====================================================================================
-    // WORKER 3: SendGrid Dispatch (Linked to "Request to fill-in Post-Recovery Questionnaire")
-    // ====================================================================================
-    @JobWorker(type = "send-survey-email")
-    public void handleSendSurvey(final ActivatedJob job) {
-        
-        String guestEmail = (String) job.getVariable("guestEmail");
-        String guestName = (String) job.getVariable("guestName");
-
-        System.out.println("📧 [SendGrid] Initiating API call to send Post-Recovery Survey to: " + guestEmail);
-        
-        // SendGrid API logic will go here
     }
 }
