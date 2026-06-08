@@ -28,8 +28,11 @@
 	</scm>
 	<properties>
 		<java.version>25</java.version>
+		<camel.version>4.20.0</camel.version>
 	</properties>
+
 	<dependencies>
+		<!-- Spring Boot Starters -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-h2console</artifactId>
@@ -42,17 +45,65 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
+
+		<!-- Apache Camel Starters -->
 		<dependency>
 			<groupId>org.apache.camel.springboot</groupId>
 			<artifactId>camel-spring-boot-starter</artifactId>
-			<version>4.20.0</version>
+			<version>${camel.version}</version>
+		</dependency>
+		<!-- Camel REST Component -->
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-rest-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<!-- Camel REST DSL with servlet -->
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-servlet-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<!-- Camel Jackson (JSON marshalling/unmarshalling) -->
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-jackson-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<!-- Camel JAXB (XML marshalling/unmarshalling) -->
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-jaxb-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<!-- Camel CSV support -->
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-csv-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+		<!-- Camel File component -->
+		<dependency>
+			<groupId>org.apache.camel.springboot</groupId>
+			<artifactId>camel-file-starter</artifactId>
+			<version>${camel.version}</version>
 		</dependency>
 
+		<!-- H2 Database -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- Camunda -->
+		<dependency>
+    		<groupId>io.camunda</groupId>
+    		<artifactId>camunda-spring-boot-starter</artifactId>
+    		<version>8.9.5</version> 
+		</dependency>
+
+		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -62,11 +113,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-    		<groupId>io.camunda</groupId>
-    		<artifactId>camunda-spring-boot-starter</artifactId>
-    		<version>8.9.5</version> 
 		</dependency>
 	</dependencies>
 

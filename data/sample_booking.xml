@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<booking>
+    <guestName>Jane Smith</guestName>
+    <email>jane.smith@example.com</email>
+    <phoneNumber>+1-555-0456</phoneNumber>
+    <requestedRoomType>suite</requestedRoomType>
+    <checkInDate>2024-06-20</checkInDate>
+    <checkOutDate>2024-06-23</checkOutDate>
+    <cardNumber>5412345678901234</cardNumber>
+    <cardExpiry>06/26</cardExpiry>
+    <amenitiesDetails>Late checkout; airport transfer; spa access</amenitiesDetails>
+</booking>

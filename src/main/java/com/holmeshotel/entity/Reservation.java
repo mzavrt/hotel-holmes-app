@@ -26,12 +26,13 @@ public class Reservation {
     private LocalDate checkOutDate;
     private String status; // "HELD", "CONFIRMED", "CHECKED_IN", "CANCELLED"
 
+    
+    private String selectedAmenities; // Comma-separated list of pre-ordered amenities
+    private Double calculatedPrice;
+
     // Business Data 
     @Column(length = 500)
-    private String guestPreferences;
-    
-    private String preOrderedAmenities;
-    private Double calculatedPrice;
+    private String amenitiesDetails;
 
     // The specific physical room given at check-in
     private String assignedRoomNumber;
@@ -64,11 +65,11 @@ public class Reservation {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public String getGuestPreferences() { return guestPreferences; }
-    public void setGuestPreferences(String guestPreferences) { this.guestPreferences = guestPreferences; }
+    public String getAmenitiesDetails() { return amenitiesDetails; }
+    public void setAmenitiesDetails(String amenitiesDetails) { this.amenitiesDetails = amenitiesDetails; }
 
-    public String getPreOrderedAmenities() { return preOrderedAmenities; }
-    public void setPreOrderedAmenities(String preOrderedAmenities) { this.preOrderedAmenities = preOrderedAmenities; }
+    public String getSelectedAmenities() { return selectedAmenities; }
+    public void setSelectedAmenities(String selectedAmenities) { this.selectedAmenities = selectedAmenities; }
 
     public Double getCalculatedPrice() { return calculatedPrice; }
     public void setCalculatedPrice(Double calculatedPrice) { this.calculatedPrice = calculatedPrice; }

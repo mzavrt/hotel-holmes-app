@@ -23,7 +23,7 @@ public class BookingWorker {
 
    @JobWorker(type = "attempt-reservation-hold")
 public Map<String, Object> handleAttemptHold(final ActivatedJob job) {
-    String requestedType = (String) job.getVariable("requestedRoomType");
+    String requestedType = (String) job.getVariable("roomType");
     LocalDate checkInDate = LocalDate.parse((String) job.getVariable("checkInDate"));
     LocalDate checkOutDate = LocalDate.parse((String) job.getVariable("checkOutDate"));
 
@@ -86,7 +86,7 @@ return Map.of(
         Object priceObj = job.getVariable("calculatedPrice");
         Double calculatedPrice = (priceObj != null) ? ((Number) priceObj).doubleValue() : 0.0;
 
-        String guestPreferences = (String) job.getVariable("amenitiesDetails");
+        String amenitiesDetails = (String) job.getVariable("amenitiesDetails");
 
         // --- EXPERT TRICK: Handle the Checkbox List ---
         // Camunda stores the checkboxes as a List<String>, but our DB expects a single String.
@@ -96,7 +96,7 @@ return Map.of(
             @SuppressWarnings("unchecked")
             java.util.List<String> amenitiesList = (java.util.List<String>) amenitiesObj;
             String joinedAmenities = String.join(", ", amenitiesList);
-            reservation.setPreOrderedAmenities(joinedAmenities);
+            reservation.setSelectedAmenities(joinedAmenities);
         }
 
         // 4. Update the entity with the permanent data
@@ -106,7 +106,7 @@ return Map.of(
         reservation.setPhoneNumber(phoneNumber);
         reservation.setCalculatedPrice(calculatedPrice);
 
-        reservation.setGuestPreferences(guestPreferences);
+        reservation.setAmenitiesDetails(amenitiesDetails);
 
         // 5. Save back to the database!
         reservationRepository.save(reservation);

@@ -61,7 +61,7 @@ VALUES ('303', 'Suite', 'VACANT', 'CLEAN');
 INSERT INTO reservation (
     reservation_code, guest_name, email, phone_number, room_type, 
     check_in_date, check_out_date, status, calculated_price, 
-    guest_preferences, pre_ordered_amenities
+    selected_amenities, amenities_details
 ) VALUES (
     'RES-100001', 'Jan Novak', 'jan@example.cz', '+420123456789', 'Suite', 
     CURRENT_DATE, DATEADD('DAY', 3, CURRENT_DATE), 'CONFIRMED', 1350.00,
@@ -72,7 +72,7 @@ INSERT INTO reservation (
 INSERT INTO reservation (
     reservation_code, guest_name, email, phone_number, room_type, 
     check_in_date, check_out_date, status, calculated_price, 
-    guest_preferences, pre_ordered_amenities
+    selected_amenities, amenities_details
 ) VALUES (
     'RES-100002', 'Eva Svobodová', 'eva@example.cz', '+420987654321', 'Deluxe', 
     DATEADD('DAY', -2, CURRENT_DATE), DATEADD('DAY', 1, CURRENT_DATE), 'CHECKED_IN', 660.00,
@@ -83,7 +83,7 @@ INSERT INTO reservation (
 INSERT INTO reservation (
     reservation_code, guest_name, email, phone_number, room_type, 
     check_in_date, check_out_date, status, calculated_price, 
-    guest_preferences, pre_ordered_amenities
+    selected_amenities, amenities_details
 ) VALUES (
     'RES-100003', 'Petr Dvořák', 'petr@example.cz', '+420111222333', 'Standard', 
     DATEADD('DAY', -3, CURRENT_DATE), CURRENT_DATE, 'CHECKED_OUT', 330.00,
@@ -94,7 +94,7 @@ INSERT INTO reservation (
 INSERT INTO reservation (
     reservation_code, guest_name, email, phone_number, room_type, 
     check_in_date, check_out_date, status, calculated_price, 
-    guest_preferences, pre_ordered_amenities
+    selected_amenities, amenities_details
 ) VALUES (
     'RES-100004', 'Lucie Černá', 'lucie@example.cz', '+420444555666', 'Standard', 
     DATEADD('DAY', 14, CURRENT_DATE), DATEADD('DAY', 20, CURRENT_DATE), 'CONFIRMED', 660.00,

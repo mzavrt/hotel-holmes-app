@@ -19,7 +19,7 @@ public class PricingWorker {
     public Map<String, Object> handleFetchMarketAverage(final ActivatedJob job) {
         
         // 1. Get the room type requested by the guest
-        String requestedType = (String) job.getVariable("requestedRoomType");
+        String requestedType = (String) job.getVariable("roomType");
 
         // 2. Query the database for the market average
         // EXPERT TIP: We use .orElse() to provide a safe fallback price just in case 

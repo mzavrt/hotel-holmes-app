@@ -1,0 +1,5 @@
+guestName;email;phoneNumber;requestedRoomType;checkInDate;checkOutDate;cardNumber;cardExpiry;amenitiesDetails
+John Doe;john.doe@example.com;+1-555-0123;deluxe;2024-06-15;2024-06-18;4532123456789012;12/25;Extra pillow; non-smoking
+Jane Smith;jane.smith@example.com;+1-555-0456;suite;2024-06-20;2024-06-23;5412345678901234;06/26;Late checkout; airport transfer; spa access
+Robert Johnson;robert.j@hotel.com;+1-555-0789;standard;2024-07-01;2024-07-05;6011111111111117;09/24;Hypoallergenic bedding; wake-up call at 7 AM
+Maria Garcia;maria.garcia@email.com;+1-555-1234;deluxe;2024-07-10;2024-07-15;3782822463100005;03/25;Accessible room; ground floor; welcome basket

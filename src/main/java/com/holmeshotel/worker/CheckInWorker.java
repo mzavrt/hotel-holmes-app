@@ -61,7 +61,7 @@ public class CheckInWorker {
             variables.put("reservationCode", res.getReservationCode());
             variables.put("guestName", res.getGuestName());
             variables.put("roomType", res.getRoomType());
-            variables.put("guestPreferences", res.getGuestPreferences());
+            variables.put("selectedAmenities", res.getSelectedAmenities());
             variables.put("checkOutDate", res.getCheckOutDate().toString());
 
             // NEW SCHEMA: Ask the DB for VACANT and CLEAN rooms of this type
