@@ -30,7 +30,7 @@ public class MessageEndEventEmailRoute extends RouteBuilder {
 
         // Route: Main email handler
         from("direct:mockEmailRouter")
-            // TOTO JE JEDINÉ routeId V TÉTO ROUTĚ:
+            
             .routeId("messageEndEventEmailRoute") 
             .log("📧 [Email Route] Received email request for message: ${body[messageName]}")
             
@@ -39,7 +39,7 @@ public class MessageEndEventEmailRoute extends RouteBuilder {
             
                 // Case 1: Reservation Denied
                 .when().simple("${body[messageName]} == 'RESERVATION_DENIED'")
-                    // SMAZÁNO: .routeId("emailRoute_reservationDenied")
+                    
                     .log("❌ [Email Route] RESERVATION_DENIED - Guest ${body[guestName]} will be notified")
                     .process(exchange -> {
                         @SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public class MessageEndEventEmailRoute extends RouteBuilder {
                 
                 // Case 2: Details Rejected
                 .when().simple("${body[messageName]} == 'DETAILS_REJECTED'")
-                    // SMAZÁNO: .routeId("emailRoute_detailsRejected")
+                  
                     .log("⚠️ [Email Route] DETAILS_REJECTED - Guest ${body[guestName]} has validation issues")
                     .process(exchange -> {
                         @SuppressWarnings("unchecked")
@@ -85,7 +85,7 @@ public class MessageEndEventEmailRoute extends RouteBuilder {
                 
                 // Case 3: Payment Failed
                 .when().simple("${body[messageName]} == 'PAYMENT_FAILED'")
-                    // SMAZÁNO: .routeId("emailRoute_paymentFailed")
+                    
                     .log("💳 [Email Route] PAYMENT_FAILED - Guest ${body[guestName]} payment was declined")
                     .process(exchange -> {
                         @SuppressWarnings("unchecked")
@@ -110,7 +110,7 @@ public class MessageEndEventEmailRoute extends RouteBuilder {
                 
                 // Case 4: Booking Confirmed
                 .when().simple("${body[messageName]} == 'BOOKING_CONFIRMED'")
-                    // SMAZÁNO: .routeId("emailRoute_bookingConfirmed")
+                    
                     .log("✅ [Email Route] BOOKING_CONFIRMED - Guest ${body[guestName]} booking is confirmed")
                     .process(exchange -> {
                         @SuppressWarnings("unchecked")
@@ -190,6 +190,28 @@ public class MessageEndEventEmailRoute extends RouteBuilder {
                     })
                     .to("direct:logMockEmail")
 
+            // Case 7: Apology for Delay (Triggered by SLA timer)
+                .when().simple("${body[messageName]} == 'SERVICE_DELAYED_APOLOGY'")
+                    .log("⏳ [Email Route] SERVICE_DELAYED_APOLOGY - Sending apology to ${body[guestName]}")
+                    .process(exchange -> {
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> body = exchange.getIn().getBody(Map.class);
+                        
+                        String subject = "Update regarding your service request - Holmes Hotel";
+                        String bodyText = "Dear " + body.getOrDefault("guestName", "Guest") + ",\n\n" +
+                            "We sincerely apologize for the delay in fulfilling your recent service request.\n" +
+                            "We are experiencing higher demand than usual, and your request is taking longer than our standard 20-minute SLA.\n\n" +
+                            "Our team is prioritizing your order and will have it delivered to your room as soon as possible.\n" +
+                            "We appreciate your patience and understanding.\n\n" +
+                            "Best regards,\n" +
+                            "Holmes Hotel Management";
+                        
+                        body.put("subject", subject);
+                        body.put("body", bodyText);
+                        exchange.getIn().setBody(body);
+                    })
+                    .to("direct:logMockEmail")
+
             
             // Default case: Unknown message type
             .otherwise()
@@ -197,7 +219,7 @@ public class MessageEndEventEmailRoute extends RouteBuilder {
             .end();
 
            
-        // Route: Log Mock Email (Toto je SPRÁVNĚ, protože to je nová routa od 'from')
+        // Route: Log Mock Email
         from("direct:logMockEmail")
             .routeId("logMockEmailRoute") 
             .process(exchange -> {

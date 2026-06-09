@@ -19,6 +19,7 @@ import java.util.Map;
  * - BOOKING_CONFIRMED
  * - SERVICE_QUESTIONNAIRE_REQUEST
  * - POST_RECOVERY_QUESTIONNAIRE
+ * - SERVICE_DELAYED_APOLOGY
  * 
  * Each email-sending task/event publishes a job of type "email-sender".
  * The worker extracts the messageName header (set in BPMN task configuration)

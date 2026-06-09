@@ -17,10 +17,12 @@
 - [Zeebe JobWorkers](#zeebe-jobworkers)
 - [Email Notification System](#email-notification-system)
 - [Database & Persistence](#database--persistence)
+- [API Testing & Webhooks](#api-testing--webhooks)
 - [Building & Testing](#building--testing)
 - [Configuration](#configuration)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Glossary](#glossary)
 
 ---
 
@@ -138,7 +140,7 @@ hotel-holmes-app/
 │   ├── controller/
 │   │   ├─ MockKDSController.java       (Mock Kitchen Display System)
 │   │   ├─ MockPaymentController.java   (Mock Payment Gateway)
-│   │   └─ WebhookController.java       (API for firing Message Events - used in )
+│   │   └─ WebhookController.java       (API for firing Message Events into Camunda)
 │   │
 │   ├── integration/
 │   │   ├── camel/
@@ -170,6 +172,7 @@ hotel-holmes-app/
 │       ├─ ComplaintWorker.java
         ├─ EmailMessageEventWorker.java
 │       ├─ InRoomServiceWorker.java
+│       ├─ PaymentWorker.java
 │       └─ PricingWorker.java
 │
 ├── src/main/resources/
@@ -202,7 +205,7 @@ hotel-holmes-app/
 | `CamundaStarterRoute` | Central hub: publishes Zeebe messages to Camunda |
 | `MessageEndEventEmailRoute` | Content-Based Router for email notifications |
 
-#### `/integration/zeebe` — Zeebe JobWorkers
+#### `/worker` — JobWorkers
 **Purpose**: Asynchronous task execution for long-running processes
 
 | Class | Responsibility |
@@ -233,7 +236,7 @@ hotel-holmes-app/
 
 - **Java 25** or higher
 - **Maven 3.8+**
-- **ngrok** (for exposing local webhook to Camunda SaaS)
+- **ngrok** (for exposing the local mock API services to Camunda SaaS)
 - **Git**
 
 ### Installation
@@ -332,7 +335,9 @@ The route will poll every 5 seconds, parse each line, and send to Camunda as sep
 
 ### Why ngrok?
 
-Camunda 8 (SaaS) needs to communicate with your local Zeebe cluster via HTTP webhooks. **ngrok** creates a public HTTPS URL that tunnels to your local application, enabling secure bi-directional communication.
+This project includes mock services (`MockKDSController`, `MockPaymentController`) that Camunda 8 SaaS calls during BPMN workflow execution (e.g., to simulate payment processing or kitchen display updates). Since Camunda SaaS runs in the cloud, it cannot reach `localhost` directly. **ngrok** creates a public HTTPS tunnel to your local application so Camunda can invoke these mock endpoints.
+
+> **Note:** ngrok is **not** required for the booking webhook endpoints (`/camel/api/webhook/*`). Those are called by external clients (e.g., Postman) that connect to your local machine directly.
 
 ### Setup ngrok
 
@@ -375,10 +380,10 @@ Camunda 8 (SaaS) needs to communicate with your local Zeebe cluster via HTTP web
 
 4. **Configure Camunda BPMN**
 
-   In your BPMN diagram's REST connector task:
+   In your BPMN diagram's REST connector task (for mock service calls):
    
    ```
-   Endpoint: https://abc123.ngrok.io/camel/api/webhook/json
+   Endpoint: https://abc123.ngrok.io/mock/payment
    Method: POST
    Headers:
    - Content-Type: application/json
@@ -574,18 +579,41 @@ Tables are automatically created by Hibernate:
 
 ---
 
+## API Testing & Webhooks
+
+To test the integration and trigger BPMN processes, import the provided Postman collection.
+
+### Setup
+
+1. Open **Postman**.
+2. Click **Import** in the top left corner.
+3. Select the file: `postman/holmes-hotel-api.postman_collection.json`.
+4. Ensure your local Spring Boot application is running on port `8080`.
+
+### Available Collections
+
+The collection includes pre-configured requests for all entry points:
+
+| Request Name | Endpoint | Description |
+| :--- | :--- | :--- |
+| **New Booking (JSON)** | `POST /camel/api/webhook/json` | Starts `Msg_NewBooking` process |
+| **New Booking (XML)** | `POST /camel/api/webhook/xml` | Starts `Msg_NewBooking` process via XML |
+| **New Complaint** | `POST /camel/api/webhook/complaint` | Starts `Msg_NewComplaint` process |
+| **Service Order** | `POST /camel/api/webhook/service-order` | Starts `ServiceOrderReceived` process |
+
+*Note: If you are running Camunda SaaS, ensure your local mock API controllers (`MockPaymentController`, `MockKDSController`) are reachable via your **ngrok** tunnel (see [Webhook Configuration with ngrok](#webhook-configuration-with-ngrok)).*
+
+---
+
 ## Building & Testing
 
 ### Build Commands
 
 ```bash
-# Clean and build
-mvn clean package
-
-# Build without running tests
+# Clean and build (skipping tests)
 mvn clean package -DskipTests
 
-# Build with tests
+# Build and run tests
 mvn clean package
 
 # Run tests only
@@ -732,7 +760,9 @@ logging.level.com.holmeshotel=DEBUG
 - To add a new channel: Create `YourRoute.java` → normalize to Map → route to `direct:startCamunda`
 
 ---
----
+
+## Glossary
+
 ### Message End Event
 
 BPMN diagram element that signals completion of a booking flow and triggers an action (e.g., send email):
